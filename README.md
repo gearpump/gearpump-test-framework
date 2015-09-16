@@ -37,7 +37,7 @@ Make sure scala and sbt are installed, if not, please install them first.
   scala [-cp scalatest-<version>.jar:...] org.scalatest.tools.Runner [arguments]
 ```
 
-  The arguments Runner accepts please check the [http://www.scalatest.org/user_guide/using_the_runner#executingSuites](scalatest doc)
+  The arguments Runner accepts please check the [scalatest doc](http://www.scalatest.org/user_guide/using_the_runner#executingSuites)
 
   For example, on Linux:
 
@@ -47,6 +47,6 @@ Make sure scala and sbt are installed, if not, please install them first.
 
   This command will run all the test cases in gearpump-linux-test-0.1.jar, "-R" specifies the runpath and "-f" causes test results to be written to the named file, "-o" causes test results to be written to the standard output. You can also specifies a suite class to run by using "-s".
 
-  Please check [http://www.scalatest.org/user_guide/using_the_runner#executingSuites](scalatest doc) for more information about the command.
+  Please check [scalatest doc](http://www.scalatest.org/user_guide/using_the_runner#executingSuites) for more information about the command.
 
 
