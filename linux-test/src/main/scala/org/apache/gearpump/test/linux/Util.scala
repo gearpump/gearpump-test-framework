@@ -99,7 +99,7 @@ object Util extends App {
     appInfo.substring(start + 13, appInfo.indexOf(",", start))
   }
 
-  def getAppDetail(appId: String): StreamAppMasterSummary = {
+  def getAppDetail(appId: String, uiAddress: String): StreamAppMasterSummary = {
     println("get app detail start")
     implicit val graphReader: upickle.default.Reader[Graph[Int, String]] = upickle.default.Reader[Graph[Int, String]] {
       case Js.Obj(verties, edges) =>
@@ -107,13 +107,13 @@ object Util extends App {
         val edgeList = upickle.default.readJs[List[(Int, String, Int)]](edges._2)
         Graph(vertexList, edgeList)
     }
-    val uiAddress = YarnBuilder.getUiAddress
+    //    val uiAddress = YarnBuilder.getUiAddress
     val appDetailString = Process(s"curl $uiAddress/api/v1.0/appmaster/$appId?detail=true").!!
     read[StreamAppMasterSummary](appDetailString)
   }
 
-  def getExecutor(appId: String, executorId: String): ExecutorSummary = {
-    val uiAddress = YarnBuilder.getUiAddress
+  def getExecutor(appId: String, executorId: String, uiAddress: String): ExecutorSummary = {
+    //    val uiAddress = YarnBuilder.getUiAddress
     val executorString = Process(s"curl $uiAddress/api/v1.0/appmaster/$appId/executor/$executorId").!!
     read[ExecutorSummary](executorString)
   }
@@ -122,8 +122,8 @@ object Util extends App {
     Process(s"kill $processId").!
   }
 
-  def isRunning(appId: String): Boolean = {
-    val appDetail = getAppDetail(appId)
+  def isRunning(appId: String, uiAddress: String): Boolean = {
+    val appDetail = getAppDetail(appId, uiAddress)
     val currentTime = System.currentTimeMillis()
     val appClock = appDetail.clock
     val delay = Math.abs(currentTime - appClock)
@@ -154,7 +154,7 @@ object Util extends App {
   def getDetail(appId: Int): Future[AppMasterSummary] = {
     //    implicit val ec: ExecutionContext = ExecutionContext.global
     import scala.concurrent.ExecutionContext.Implicits.global
-//    val master = getMasterActorRef
+    //    val master = getMasterActorRef
     val request = AppMasterDataDetailRequest(appId)
     println("get app detail")
     askAppMaster[AppMasterSummary](master, appId, request)

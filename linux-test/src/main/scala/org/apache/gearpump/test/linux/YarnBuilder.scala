@@ -1,13 +1,10 @@
 package org.apache.gearpump.test.linux
 
 import java.io.File
-import io.gearpump.cluster.AppMasterToMaster.MasterData
-import io.gearpump.cluster.master.MasterSummary
-import upickle.default._
 
 import scala.sys.process.{Process, _}
 
-object YarnBuilder {
+object YarnBuilder extends Builder {
 
   lazy val sourceRoot = "/root/gearpump-yarn-test/gearpump"
   lazy val hadoopRoot = "/root/hadoop/hadoop-2.7.1"
@@ -29,10 +26,10 @@ object YarnBuilder {
   def uploadToHdfs(): Unit = {
     println("upload gearpump to HDFS")
     val hadoopDir = new File(hadoopRoot)
-    val packDir = new File(targetRoot)
+    val targetDir = new File(targetRoot)
     Process(s"sbin/start-dfs.sh", hadoopDir).!
     Process(s"bin/hdfs dfs -mkdir $hdfsRoot", hadoopDir).!
-    var gearpumpTar = (Process("ls", packDir) #| "grep tar.gz").!!
+    var gearpumpTar = (Process("ls", targetDir) #| "grep tar.gz").!!
     gearpumpTar = gearpumpTar.replace("\n", "")
     var uploadResult = Process(s"bin/hdfs dfs -put $targetRoot/$gearpumpTar $hdfsRoot", hadoopDir).!
     if (uploadResult != 0) {
@@ -47,13 +44,8 @@ object YarnBuilder {
     val hadoopDir = new File(hadoopRoot)
     val targetDir = new File(targetRoot)
     val packDir = new File(targetRoot + "/pack")
-    //    val startResult = Process("sbin/start-yarn.sh", hadoopDir).!
-    // if yarn already started, restart yarn
-    //    if (startResult != 0) {
-    //restart yarn
     Process("sbin/stop-yarn.sh", hadoopDir).!
     Process("sbin/start-yarn.sh", hadoopDir).!
-    //    }
     var gearpumpVersion = (Process("ls", targetDir) #| "grep tar.gz").!!
     gearpumpVersion = gearpumpVersion.replace("\n", "").replace(".tar.gz", "")
     println(s"gearpump version: $gearpumpVersion")
@@ -67,15 +59,6 @@ object YarnBuilder {
     val startIndex = appList.indexOf("http")
     val endIndex = appList.indexOf("\n", startIndex)
     appList.substring(startIndex, endIndex)
-  }
-
-  def getMaster: (String, Int) = {
-    val uiAddress = getUiAddress
-    val masterString = Process(s"curl $uiAddress/api/v1.0/master").!!
-    val master: MasterSummary = read[MasterData](masterString).masterDescription
-    val host = master.leader._1.substring(master.leader._1.indexOf("@") + 1)
-    val port = master.leader._2
-    (host, port)
   }
 
 }
