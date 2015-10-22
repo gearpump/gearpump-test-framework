@@ -8,6 +8,7 @@ class ApplicationHASpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   lazy val appName = "app" + System.currentTimeMillis()
   lazy val timeForRunning = 60 * 1000
   lazy val master = YarnBuilder.getMaster
+  lazy val uiAddress = YarnBuilder.getUiAddress
 
   override def beforeAll() = {
     ApplicationHASpec.deployOnYarn()
@@ -26,29 +27,29 @@ class ApplicationHASpec extends FlatSpec with Matchers with BeforeAndAfterAll {
   it should "be running" in {
     Thread.sleep(timeForRunning)
     val appId = getAppId(appName, master)
-    val running = isRunning(appId)
+    val running = isRunning(appId, uiAddress)
     running should be (right = true)
   }
 
   it should "recover after killing an executor" in {
     val appId = getAppId(appName, master)
-    val executorJvmName = getExecutor(appId,"0").jvmName
+    val executorJvmName = getExecutor(appId,"0",uiAddress).jvmName
     val processorId = executorJvmName.substring(0, executorJvmName.indexOf("@"))
     println(s"process id: $processorId")
     killProcess(processorId)
     Thread.sleep(timeForRunning)
-    val running = isRunning(appId)
+    val running = isRunning(appId, uiAddress)
     running should be (right = true)
   }
 
   it should "recover after killing appMaster" in {
     val appId = getAppId(appName, master)
-    val executorJvmName = getExecutor(appId,"-1").jvmName
+    val executorJvmName = getExecutor(appId,"-1",uiAddress).jvmName
     val processorId = executorJvmName.substring(0, executorJvmName.indexOf("@"))
     println(s"process id: $processorId")
     killProcess(processorId)
     Thread.sleep(timeForRunning)
-    val running = isRunning(appId)
+    val running = isRunning(appId, uiAddress)
     running should be (right = true)
   }
 

@@ -10,6 +10,7 @@ class ScalabilitySpec extends FlatSpec with Matchers with BeforeAndAfterAll{
   lazy val splitNum = 500
   lazy val sumNum = 500
   lazy val master = YarnBuilder.getMaster
+  lazy val uiAddress = YarnBuilder.getUiAddress
 
   override def beforeAll() = {
     YarnBuilder.init()
@@ -29,7 +30,7 @@ class ScalabilitySpec extends FlatSpec with Matchers with BeforeAndAfterAll{
   it should "be running" in {
     Thread.sleep(timeForRunning)
     val appId = getAppId(appName, master)
-    val running = isRunning(appId)
+    val running = isRunning(appId, uiAddress)
     running should be (right = true)
   }
 
