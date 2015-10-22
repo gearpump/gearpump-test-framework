@@ -1,5 +1,8 @@
 package org.apache.gearpump.test.linux
 
+import io.gearpump.cluster.AppMasterToMaster.MasterData
+import io.gearpump.cluster.master.MasterSummary
+import upickle.default._
 import scala.sys.process.Process
 
 trait Builder {
