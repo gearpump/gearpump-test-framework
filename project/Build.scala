@@ -39,9 +39,9 @@ object Build extends sbt.Build {
       Seq(
         // custom settings here
       )
-  ).aggregate(yarn_test) dependsOn (yarn_test)
+  ).aggregate(linux_test) dependsOn (linux_test)
 
-  lazy val yarn_test = Project(
+  lazy val linux_test = Project(
     id = "gearpump-linux-test",
     base = file("linux-test"),
     settings = commonSettings ++ packSettings ++ Seq(
