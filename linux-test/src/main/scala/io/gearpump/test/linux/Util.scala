@@ -19,6 +19,7 @@
 package io.gearpump.test.linux
 
 import java.io.File
+import java.nio.file.Files
 
 import akka.actor.{ActorRef, ActorSystem}
 import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
@@ -40,19 +41,12 @@ object Util extends App {
   lazy val httpsProxy = "https_proxy" -> "http://child-prc.intel.com:913"
   lazy val address = "https://github.com/intel-hadoop/gearpump.git"
   lazy val build = "sbt clean assembly packArchive"
-  lazy val sourceRoot = "/root/gearpump-yarn-test/gearpump"
+  lazy val sourceRoot = createSourceRootDir()
   lazy val targetRoot = sourceRoot + "/output/target"
   lazy val packDir = new File(targetRoot + "/pack")
   lazy val master: ActorRef = getMasterActorRef
-  lazy val delayTime = 20 * 1000
+  lazy val delayTime = 30 * 1000
   lazy val examples = getExamples
-
-  override def main(args: Array[String]): Unit = {
-
-    println("yarn test start!")
-
-    println("stop")
-  }
 
   def buildProject(): Unit = {
     val sourceDir = new File(sourceRoot)
@@ -69,6 +63,11 @@ object Util extends App {
     println(s"build return: $buildResult")
     //if build failed, what to do?
 
+  }
+
+  def createSourceRootDir(): String = {
+    val rootDir = Files.createTempDirectory("gearpump")
+    rootDir.toString
   }
 
   def getExamples: Array[String] = {

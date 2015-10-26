@@ -38,6 +38,7 @@ object Build extends sbt.Build {
     settings = commonSettings ++ publishPackArchives ++
       Seq(
         // custom settings here
+        packResourceDir += (baseDirectory.value / "deploy" -> "deploy")
       )
   ).aggregate(linux_test) dependsOn (linux_test)
 
