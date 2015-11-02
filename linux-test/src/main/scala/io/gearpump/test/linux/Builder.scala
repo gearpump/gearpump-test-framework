@@ -1,4 +1,4 @@
-package org.apache.gearpump.test.linux
+package io.gearpump.test.linux
 
 import io.gearpump.cluster.AppMasterToMaster.MasterData
 import io.gearpump.cluster.master.MasterSummary

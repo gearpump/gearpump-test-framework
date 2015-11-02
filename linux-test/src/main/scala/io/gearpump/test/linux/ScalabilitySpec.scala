@@ -1,6 +1,6 @@
-package org.apache.gearpump.test.linux
+package io.gearpump.test.linux
 
-import org.apache.gearpump.test.linux.Util._
+import Util._
 import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
 
 class ScalabilitySpec extends FlatSpec with Matchers with BeforeAndAfterAll{
