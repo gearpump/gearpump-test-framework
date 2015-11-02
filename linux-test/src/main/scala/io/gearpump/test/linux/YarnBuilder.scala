@@ -1,4 +1,4 @@
-package org.apache.gearpump.test.linux
+package io.gearpump.test.linux
 
 import java.io.File
 
