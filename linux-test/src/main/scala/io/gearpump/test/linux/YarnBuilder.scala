@@ -21,14 +21,12 @@ package io.gearpump.test.linux
 import java.io.File
 
 import scala.sys.process.{Process, _}
+import Util._
 
 object YarnBuilder extends Builder {
 
-  lazy val sourceRoot = "/root/gearpump-yarn-test/gearpump"
   lazy val hadoopRoot = "/root/hadoop/hadoop-2.7.1"
-  lazy val targetRoot = sourceRoot + "/output/target"
   lazy val hdfsRoot = "/user/gearpump/"
-  lazy val packDir = new File(targetRoot + "/pack")
   private var isInit = false
 
   def init(): Unit = {
